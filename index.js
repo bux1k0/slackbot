@@ -27,6 +27,22 @@ app.command("/bxbot-catfact", async ({ ack, respond }) => {
   }
 });
 
+app.command("/bxbot-joke", async ({ ack, respond }) => {
+  await ack();
+
+  try {
+    const response = await axios.get("https://icanhazdadjoke.com/slack", {
+      headers: { Accept: "application/json" }
+    });
+
+    const joke = response.data.attachments[0].text;
+    await respond({ text: `Random dad joke:\n${joke}` });
+  } catch (err) {
+    console.error(err);
+    await respond({ text: "Failed to fetch a dad joke." });
+  }
+});
+
 (async () => {
   await app.start();
   console.log("bot is running!");
